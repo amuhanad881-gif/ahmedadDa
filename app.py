@@ -1,3 +1,5 @@
+import eventlet
+eventlet.monkey_patch()
 from flask import Flask, request, jsonify, send_from_directory
 from flask_socketio import SocketIO, emit, join_room, leave_room
 import json
@@ -8,7 +10,7 @@ import hashlib
 
 app = Flask(__name__, static_folder='.')
 # Configure SocketIO without eventlet
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading', ping_timeout=60, ping_interval=25)
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', ping_timeout=60, ping_interval=25)
 
 # Add CORS headers manually
 @app.after_request
@@ -895,7 +897,7 @@ def handle_ice_candidate(data):
         print(f"ICE candidate error: {str(e)}")
 
 if __name__ == '__main__':
-    print("="*50)
+     print("="*50)
     print("Echo Room Server - Complete Version")
     print("="*50)
     print("Server running at: http://localhost:5000")
@@ -906,4 +908,5 @@ if __name__ == '__main__':
     print("- Leave servers")
     print("- Voice/Video/Screen share ready")
     print("="*50)
-    socketio.run(app, debug=True, port=5000, allow_unsafe_werkzeug=True)
+    port = int(os.environ.get('PORT', 5000))
+    socketio.run(app, host='0.0.0.0', port=port, debug=False)
