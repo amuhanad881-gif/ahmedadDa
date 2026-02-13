@@ -9,7 +9,14 @@ import uuid
 import hashlib
 
 app = Flask(__name__, static_folder='.')
-# Configure SocketIO without eventlet
+@app.route('/test')
+def test():
+    return "Server is working!"
+
+@app.route('/api/test')
+def api_test():
+    return jsonify({"status": "ok", "message": "API is working"})
+    
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', ping_timeout=60, ping_interval=25)
 
 # Add CORS headers manually
@@ -910,4 +917,5 @@ if __name__ == '__main__':
     print("="*50)
     port = int(os.environ.get('PORT', 5000))
     socketio.run(app, host='0.0.0.0', port=port, debug=False)
+
 
