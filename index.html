@@ -1128,8 +1128,10 @@
         let screenStream = null;
         let peerConnections = {};
 
-        // Server URL - change this to match your server
-        const SERVER_URL = 'http://127.0.0.1:5000';
+        
+const SERVER_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://127.0.0.1:5000' 
+    : window.location.origin;
 
         console.log('Connecting to server:', SERVER_URL);
 
@@ -2257,4 +2259,5 @@
         });
     </script>
 </body>
+
 </html>
