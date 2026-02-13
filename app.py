@@ -8,7 +8,7 @@ from datetime import datetime
 import uuid
 import hashlib
 
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__, static_folder='.', static_url_path='')
 @app.route('/test')
 def test():
     return "Server is working!"
@@ -904,18 +904,48 @@ def handle_ice_candidate(data):
         print(f"ICE candidate error: {str(e)}")
 
 if __name__ == '__main__':
-    print("="*50)
-    print("Echo Room Server - Complete Version")
-    print("="*50)
-    print("Server running at: http://localhost:5000")
-    print("\nFeatures:")
-    print("- Session persistence (stay logged in)")
-    print("- Message persistence (messages saved)")
-    print("- Create channels")
-    print("- Leave servers")
-    print("- Voice/Video/Screen share ready")
-    print("="*50)
+    import sys
+    import os
+    
+    print("="*50, file=sys.stderr)
+    print("🚀 Echo Room Server Starting...", file=sys.stderr)
+    print("="*50, file=sys.stderr)
+    
+    # Get port from environment (Railway sets this automatically)
     port = int(os.environ.get('PORT', 5000))
-    socketio.run(app, host='0.0.0.0', port=port, debug=False)
-
-
+    
+    # Print debug info to stderr (visible in Railway logs)
+    print(f"📡 Port: {port}", file=sys.stderr)
+    print(f"📁 Current directory: {os.getcwd()}", file=sys.stderr)
+    print(f"📄 Files in directory: {os.listdir('.')}", file=sys.stderr)
+    
+    # Check if index.html exists
+    if os.path.exists('index.html'):
+        print("✅ index.html found", file=sys.stderr)
+    else:
+        print("❌ index.html NOT found!", file=sys.stderr)
+    
+    # Check data directory
+    try:
+        os.makedirs('data', exist_ok=True)
+        print("✅ Data directory ready", file=sys.stderr)
+    except Exception as e:
+        print(f"❌ Data directory error: {e}", file=sys.stderr)
+    
+    print("="*50, file=sys.stderr)
+    print("✅ Server Features:", file=sys.stderr)
+    print("   - Session persistence", file=sys.stderr)
+    print("   - Message persistence", file=sys.stderr)
+    print("   - Create channels", file=sys.stderr)
+    print("   - Leave servers", file=sys.stderr)
+    print("   - Voice/Video/Screen share ready", file=sys.stderr)
+    print("="*50, file=sys.stderr)
+    print(f"🌐 Server will be available at: http://0.0.0.0:{port}", file=sys.stderr)
+    print("="*50, file=sys.stderr)
+    
+    # Start the server
+    try:
+        socketio.run(app, host='0.0.0.0', port=port, debug=False, allow_unsafe_werkzeug=True)
+    except Exception as e:
+        print(f"💥 FATAL ERROR: {e}", file=sys.stderr)
+        sys.exit(1)
