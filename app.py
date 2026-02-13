@@ -897,7 +897,7 @@ def handle_ice_candidate(data):
         print(f"ICE candidate error: {str(e)}")
 
 if __name__ == '__main__':
-     print("="*50)
+    print("="*50)
     print("Echo Room Server - Complete Version")
     print("="*50)
     print("Server running at: http://localhost:5000")
@@ -910,3 +910,4 @@ if __name__ == '__main__':
     print("="*50)
     port = int(os.environ.get('PORT', 5000))
     socketio.run(app, host='0.0.0.0', port=port, debug=False)
+
